@@ -10,7 +10,7 @@ class Crawler(object):
     def __init__(self):
         pass
 
-    async def parse_url(self, url):
+    async def parse_url(self, url, mdb):
         """
         Get the content of the URL and create appropriate dicitonary
         Args:
@@ -24,22 +24,28 @@ class Crawler(object):
         article.parse()
         data['authors'] = article.authors
         data['date'] = article.publish_date
-        data['text'] = article.text
+        data['text'] = article.text.replace('\n', '')
         article.nlp()
+        # keywords used to search the data from DB
         data['tags'] = article.keywords
-
-        print(data)
+        # Insert the result into DB
+        asyncio.ensure_future(mdb.single_insert(data))
 
 
 if __name__ == '__main__':
     crawler = Crawler()
+    configuraion = utils.read_from_configuration('config.yaml')
+    connect_string = utils.get_db_connect_string(configuraion)
+    mdb = NPMongoDB(connect_string)
+
     url = ('https://www.theguardian.com/australia-news/2017/aug/'
            + '22/australia-resettles-cuban-refugees-found-clinging-to-'
            + 'lighthouse-off-florida-keys')
-    policy = asyncio.get_event_loop_policy()
-    policy.set_event_loop(policy.new_event_loop())
+    # policy = asyncio.get_event_loop_policy()
+    # policy.set_event_loop(policy.new_event_loop())
     loop = asyncio.get_event_loop()
-    future_tasks = asyncio.ensure_future(crawler.parse_url(url))
+    # future_tasks = asyncio.ensure_future(crawler.parse_url(url, mdb))
+    future_tasks = asyncio.ensure_future(mdb.in_search(['blog', 'test']))
     asyncio.gather(future_tasks)
     try:
         print('Continuous loop...')

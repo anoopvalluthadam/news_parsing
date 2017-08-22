@@ -1,4 +1,5 @@
 from pymongo import MongoClient
+import motor.motor_asyncio
 
 
 class NPMongoDB(object):
@@ -9,21 +10,21 @@ class NPMongoDB(object):
         Args:
             connect_string (string): Connect string for DB
         """
-        client = None
-        try:
-            client = MongoClient(connect_string)
-        except Exception as error:
-            print('DB connection Error "{}"'.format(str(error)))
-            exit(1)
-
-        self.client = client
+        self.client = None
 
         if not db:
-            self.db = client.news
+            try:
+                self.client = motor.motor_asyncio.AsyncIOMotorClient(
+                    connect_string)
+                print('DB connected...')
+            except Exception as error:
+                print('DB connection Error "{}"'.format(str(error)))
+                exit(1)
+            self.db = self.client.news
         else:
             self.db = db
 
-    def single_insert(self, data):
+    async def single_insert(self, data):
         """
         Single data insertion into DB
         Args:
@@ -32,11 +33,11 @@ class NPMongoDB(object):
         Returns:
             post_id (pymongo.results.InsertOneResult object): Post ID
         """
-        post_id = self.db.insert_one(data)
-
+        post_id = await self.db.posts.insert_one(data)
+        print('Data inserted...')
         return post_id
 
-    def in_search(self, attr):
+    async def in_search(self, attr):
         """
         Search the attr items
         Example: Post1 = {tags: [a, b, c, d]}, post2 = {a, b, c}
@@ -48,11 +49,13 @@ class NPMongoDB(object):
             result (MongoClient search result Obj): Search result
 
         """
-        result = None
+        results = []
         search_attr = {'tags': {'$in': attr}}
         try:
-            result = self.db.posts.find(search_attr)
+            cursor = self.db.posts.find(search_attr)
+            for document in await cursor.to_list(length=100):
+                results.append(document)
         except Exception as error:
             print('Search Error: "{}"'.format(str(error)))
 
-        return result
+        return results

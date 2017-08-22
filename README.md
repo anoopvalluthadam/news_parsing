@@ -1,1 +1,1 @@
-# nwes_parsing
+# news parsing

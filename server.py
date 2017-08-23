@@ -7,8 +7,8 @@ from tornado import gen
 import jwt
 import datetime
 import json
-
-from utils import mongodb
+import utils
+from pymongo import MongoClient
 from bson import json_util
 
 
@@ -21,7 +21,7 @@ def authenticate(func):
         username = self.get_argument('username')
         password = self.get_argument('password')
 
-        if username == 'anu' and password == 'pass':
+        if username == 'admin' and password == 'iamadmin':
             encoded = jwt.encode(
                     {username: password,
                      'exp': (datetime.datetime.utcnow()
@@ -29,7 +29,7 @@ def authenticate(func):
                     'secret', algorithm='HS256'
             )
 
-            encoded = {'error': None, 'key': encoded}
+            encoded = {'error': None, 'key': encoded.decode("utf-8")}
             func(self, encoded)
         else:
             func(self, {'error': 'Invalid username/Password',
@@ -42,6 +42,7 @@ def authentication_required(func):
     Check authentication
     """
     def inner(self):
+
         key = self.get_argument('key')
         try:
             decoded = jwt.decode(key, 'secret')
@@ -74,45 +75,47 @@ class JsonObject:
                           sort_keys=True, indent=4)
 
 
-def get_news_details(keyword):
+def search(keywords, db):
     """
     Get the news details from the DB
     Args:
-        keyword: keyword from the client
+        keywords: keywords from the client
+        db (MongoClient Object): DB object
     Returns:
-        data: curresponding news details
+        results: curresponding news details
     """
-    db = mongodb.connect_to_db()
-    news_data = mongodb.grep_news_using_regex(db, keyword)
-    return_data = {}
-    count = 1
-    if news_data:
-        for news in news_data:
-            news_count = 'news' + str(count)
-            return_data[news_count] = news
-            count += 1
-    return json_util.dumps(return_data)
+    keywords = keywords.split(' ')
+    print('Searching...{}'.format(str(keywords)))
+    results = []
+    search_attr = {'tags': {'$in': keywords}}
+    try:
+        for document in db.find(search_attr):
+            results.append(document['url'])
+    except Exception as error:
+        print('Search Error: "{}"'.format(str(error)))
+
+    return json_util.dumps(results)
 
 
-class GetNewsDetails(tornado.web.RequestHandler):
+class NewsSearch(tornado.web.RequestHandler):
     @authentication_required
     @tornado.web.asynchronous
     @gen.engine
     def post(self, decoded):
-        """
-        API to get the news
-        """
-        keyword = self.get_argument('keyword')
-        data = get_news_details(keyword)
-        # return success to the caller
+        keywords = self.get_argument('keywords')
+        data = search(keywords, self.settings['db'])
         self.write(json.dumps(data))
         self.finish()
 
 
+configuraion = utils.read_from_configuration('config.yaml')
+connect_string = utils.get_db_connect_string(configuraion)
+db = MongoClient(connect_string).news.posts
+
 application = tornado.web.Application([
     (r"/", MainHandler),
-    (r"/fetch_news", GetNewsDetails)
-])
+    (r"/search", NewsSearch)
+], db=db)
 
 if __name__ == "__main__":
 

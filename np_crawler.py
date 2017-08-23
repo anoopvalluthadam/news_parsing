@@ -34,10 +34,12 @@ class Crawler(object):
                     article.download()
                 except Exception as error:
                     print('Article Download Error: {}'.format(str(error)))
+                    continue
                 try:
                     article.parse()
                 except Exception as error:
                     print('Article parse Error: {}'.format(str(error)))
+                    continue
                 data['authors'] = article.authors
                 data['date'] = article.publish_date
                 data['text'] = article.text.replace('\n', '')
@@ -47,7 +49,6 @@ class Crawler(object):
                 # Insert the result into DB
                 data['url'] = url
                 asyncio.ensure_future(mdb.single_insert(data))
-                # print(data)
             else:
                 print('queue empty...')
                 await asyncio.sleep(3)
@@ -60,10 +61,6 @@ if __name__ == '__main__':
     configuraion = utils.read_from_configuration('config.yaml')
     connect_string = utils.get_db_connect_string(configuraion)
     mdb = NPMongoDB(connect_string)
-
-    url = ('https://www.theguardian.com/australia-news/2017/aug/'
-           + '22/australia-resettles-cuban-refugees-found-clinging-to-'
-           + 'lighthouse-off-florida-keys')
 
     loop = asyncio.get_event_loop()
     future_tasks = asyncio.ensure_future(crawler.parse_url(mdb))

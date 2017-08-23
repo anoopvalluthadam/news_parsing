@@ -108,6 +108,10 @@ class NewsSearch(tornado.web.RequestHandler):
         self.write(data)
         self.finish()
 
+    def get(self):
+        self.write(json.dumps({1: 2}))
+        self.finish()
+
 
 configuraion = utils.read_from_configuration('config.yaml')
 connect_string = utils.get_db_connect_string(configuraion)

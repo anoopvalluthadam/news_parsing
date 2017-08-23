@@ -4,11 +4,13 @@ import urllib
 import json
 import argparse
 
+IP = '35.194.145.97'
+PORT = 8080
 params = urllib.parse.urlencode({'username': 'admin', 'password': 'iamadmin'})
 
 headers = {"Content-type": "application/x-www-form-urlencoded",
            "Accept": "text/plain"}
-conn = httplib.HTTPConnection("localhost", 8888)
+conn = httplib.HTTPConnection(IP, PORT)
 
 conn.request("POST", "/", params, headers)
 response = conn.getresponse()
@@ -19,7 +21,7 @@ def get_news_details(keyword):
     params = urllib.parse.urlencode({'key': key, 'keywords': keyword})
     headers = {"Content-type": "application/x-www-form-urlencoded",
                "Accept": "text/plain"}
-    conn = httplib.HTTPConnection("localhost", 8888)
+    conn = httplib.HTTPConnection(IP, PORT)
     conn.request("POST", "/search", params, headers)
     response = conn.getresponse()
     return response.read().decode('utf-8')

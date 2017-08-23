@@ -1,0 +1,13 @@
+pip3 install scrapy
+pip3 install pyopenssl
+pip3 install Twisted==16.0.0
+pip3 install pymongo==3.3.0
+pip3 install tornado
+pip3 install PyJWT
+pip3 install BeautifulSoup4
+pip3 install pytest
+pip3 install newspaper3k
+python3 - <<-EOF
+import nltk
+nltk.download()
+EOF

@@ -1,3 +1,4 @@
+import asyncio
 from pymongo import MongoClient
 import motor.motor_asyncio
 
@@ -33,11 +34,14 @@ class NPMongoDB(object):
         Returns:
             post_id (pymongo.results.InsertOneResult object): Post ID
         """
-        post_id = await self.db.posts.insert_one(data)
-        print('Data inserted...')
-        return post_id
+        exists = await self.db.posts.find_one({'url': data['url']})
+        if not exists:
+            post_id = await self.db.posts.insert_one(data)
+            print('Data inserted...')
+            return post_id
+        print('{} exists in the DB...'.format(data['url']))
 
-    async def in_search(self, attr):
+    async def in_search(self, attr, field):
         """
         Search the attr items
         Example: Post1 = {tags: [a, b, c, d]}, post2 = {a, b, c}
@@ -50,7 +54,7 @@ class NPMongoDB(object):
 
         """
         results = []
-        search_attr = {'tags': {'$in': attr}}
+        search_attr = {field: {'$in': attr}}
         try:
             cursor = self.db.posts.find(search_attr)
             for document in await cursor.to_list(length=100):

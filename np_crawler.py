@@ -21,8 +21,6 @@ class Crawler(object):
         self.redis = await aioredis.create_redis(('localhost', 6379))
         while True:
             url = await self.redis.lpop('mylist')
-            print('-' * 100)
-            print(url)
             if url:
                 url = url.decode("utf-8")
                 data = {}

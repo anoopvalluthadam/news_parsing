@@ -1,8 +1,8 @@
 import yaml
 
 
-def get_db_connect_string(configuraion, username='admin',
-                          password='iamadmin', name='mongodb'):
+def get_db_connect_string(configuraion, username='anoop',
+                          password='iamanoop', name='mongodb'):
     """
     Get Db connect string from the configuraion
     Args:

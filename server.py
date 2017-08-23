@@ -5,6 +5,7 @@ import tornado.httpserver
 from tornado import gen
 
 import jwt
+import ssl
 import datetime
 import json
 import utils
@@ -102,15 +103,15 @@ class NewsSearch(tornado.web.RequestHandler):
     @tornado.web.asynchronous
     @gen.engine
     def post(self, decoded):
-        keywords = self.get_argument('keywords')
+        keywords = self.get_argument('keywords').lower()
         data = search(keywords, self.settings['db'])
-        self.write(json.dumps(data))
+        self.write(data)
         self.finish()
 
 
 configuraion = utils.read_from_configuration('config.yaml')
 connect_string = utils.get_db_connect_string(configuraion)
-db = MongoClient(connect_string).news.posts
+db = MongoClient(connect_string, ssl_cert_reqs=ssl.CERT_NONE).news.posts
 
 application = tornado.web.Application([
     (r"/", MainHandler),

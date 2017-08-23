@@ -1,5 +1,5 @@
-import asyncio
-from pymongo import MongoClient
+
+import ssl
 import motor.motor_asyncio
 
 
@@ -16,8 +16,9 @@ class NPMongoDB(object):
         if not db:
             try:
                 self.client = motor.motor_asyncio.AsyncIOMotorClient(
-                    connect_string)
+                    connect_string, ssl_cert_reqs=ssl.CERT_NONE)
                 print('DB connected...')
+                print((self.client.server_info()))
             except Exception as error:
                 print('DB connection Error "{}"'.format(str(error)))
                 exit(1)
@@ -34,10 +35,12 @@ class NPMongoDB(object):
         Returns:
             post_id (pymongo.results.InsertOneResult object): Post ID
         """
-        exists = await self.db.posts.find_one({'url': data['url']})
+        try:
+            exists = await self.db.posts.find_one({'url': data['url']})
+        except Exception as error:
+            print('Search Error: "{}"'.format(str(error)))
         if not exists:
             post_id = await self.db.posts.insert_one(data)
-            print('Data inserted...')
             return post_id
         print('{} exists in the DB...'.format(data['url']))
 

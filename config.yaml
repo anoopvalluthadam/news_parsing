@@ -1,4 +1,3 @@
 DB:
     - name: mongodb
-      # connect_string: mongodb://username:password@aws-us-east-1-portal.28.dblayer.com:22452,aws-us-east-1-portal.29.dblayer.com:22452/admin?ssl=true
-      connect_string: mongodb://username:password@localhost
+      connect_string: mongodb://username:password@aws-us-east-1-portal.28.dblayer.com:22452,aws-us-east-1-portal.29.dblayer.com:22452/news?ssl=true

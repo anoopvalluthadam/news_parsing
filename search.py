@@ -1,7 +1,8 @@
+
 import http.client as httplib
 import urllib
 import json
-import optparse
+import argparse
 
 params = urllib.parse.urlencode({'username': 'admin', 'password': 'iamadmin'})
 
@@ -12,7 +13,6 @@ conn = httplib.HTTPConnection("localhost", 8888)
 conn.request("POST", "/", params, headers)
 response = conn.getresponse()
 key = json.loads(response.read().decode('utf-8'))['key']
-print(key)
 
 
 def get_news_details(keyword):
@@ -22,10 +22,15 @@ def get_news_details(keyword):
     conn = httplib.HTTPConnection("localhost", 8888)
     conn.request("POST", "/search", params, headers)
     response = conn.getresponse()
-    print('#' * 100)
-    print(response.status, response.read())
+    return response.read().decode('utf-8')
 
 
 if __name__ == '__main__':
-
-    get_news_details('prince harry')
+    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--search", help="Search words",
+                        action="store", dest='keywords',
+                        required=True)
+    options = parser.parse_args()
+    for url in json.loads(get_news_details(options.keywords)):
+        print(url)

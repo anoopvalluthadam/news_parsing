@@ -125,6 +125,6 @@ application = tornado.web.Application([
 if __name__ == "__main__":
 
     http_server = tornado.httpserver.HTTPServer(application)
-    http_server.listen(8888)
+    http_server.listen(8080)
     tornado.autoreload.start()
     tornado.ioloop.IOLoop.instance().start()

@@ -109,7 +109,8 @@ class NewsSearch(tornado.web.RequestHandler):
         self.finish()
 
     def get(self):
-        self.write(json.dumps({1: 2}))
+        # Test method
+        self.write('Yey! It works')
         self.finish()
 
 

@@ -91,7 +91,12 @@ def search(keywords, db):
     search_attr = {'tags': {'$in': keywords}}
     try:
         for document in db.find(search_attr):
-            results.append(document['url'])
+            data = {
+                'url': document['url'],
+                'content': document['text'],
+                'date': str(document['date'])
+            }
+            results.append(data)
     except Exception as error:
         print('Search Error: "{}"'.format(str(error)))
 

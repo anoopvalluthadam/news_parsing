@@ -73,3 +73,8 @@ How to Setup locally
     ```
     # python3 search.py --search 'australia Trump' --port 8888
     ```
+- How to run Tests
+  ```
+  # cd tests
+  # ./test
+  ```

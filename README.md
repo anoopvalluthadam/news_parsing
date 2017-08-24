@@ -55,12 +55,21 @@ How to Setup locally
     NOTE: - make sure that NLKT is installed and downloaded the data
           - Test Redis setup and verify its connectivity in the default PORT
 - Run
-    We have to run 3 components otgether
+    We have to run 3 components together
     1. Spider
     2. Crawler
     3. webserver
     ```
-    - # python3 server.py
-    - # python3 server.py
-    - # python3 np_crawler.py
+    # python3 server.py
+    # python3 server.py
+    # python3 np_crawler.py
+    ```
+- search through client
+  - If you have hosted in cloud, you can use like this
+    ```
+    # python3 search.py --search 'Trump australia' --ip 1.2.3.4 --port 8080
+    ```
+  - Local installation search
+    ```
+    # python3 search.py --search 'australia Trump' --port 8888
     ```

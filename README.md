@@ -42,4 +42,4 @@ Crawler(Consumer)
 
 Webserver(Tornado)
 ------------------
-* Accept the User search and respond with results(URL from  https://www.theguardian.com/au) from  the DB
+* Accept the User search and respond with results(URL, date, Text from  https://www.theguardian.com/au) from  the DB

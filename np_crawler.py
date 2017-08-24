@@ -1,8 +1,5 @@
 # -*- coding: utf-8; -*-
 #
-
-# This file is part of Mandriva Management Console (MMC).
-#
 # News Parsing is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
@@ -14,7 +11,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with MMC.  If not, see <http://www.gnu.org/licenses/>.
+# along with News Parsing.  If not, see <http://www.gnu.org/licenses/>.
 #
 # @author : Anoop Valluthadam <anoopvalluthadam@gmail.com>
 

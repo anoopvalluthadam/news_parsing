@@ -71,5 +71,5 @@ How to Setup locally
     ```
   - Local installation search
     ```
-    # python2 search.py --search 'australia Trump' --port 8888
+    # python3 search.py --search 'australia Trump' --port 8888
     ```

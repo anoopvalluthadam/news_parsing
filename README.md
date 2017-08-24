@@ -64,12 +64,12 @@ How to Setup locally
     # python3 server.py
     # python3 np_crawler.py
     ```
-- search through clent
-  - If you have hosted somewhere you can use like this
+- search through client
+  - If you have hosted in cloud, you can use like this
     ```
-    # python3 search.py --search 'Trump' --ip 1.2.3.4 --port 8080
+    # python3 search.py --search 'Trump australia' --ip 1.2.3.4 --port 8080
     ```
-  - Local search
+  - Local installation search
     ```
     # python2 search.py --search 'australia Trump' --port 8888
     ```

@@ -8,9 +8,10 @@ pip3 install BeautifulSoup4
 pip3 install pytest
 pip3 install newspaper3k
 apt-get install redis-server
-pip3 install motot
+pip3 install motor
 pip3 instasll aioredis
 pip3 instsall motor
+pip3 install pytest-asyncio
 python3 - <<-EOF
 import nltk
 nltk.download()

@@ -5,6 +5,7 @@ import json
 import argparse
 
 IP = '35.194.145.97'
+# IP = 'localhost'
 PORT = 8080
 params = urllib.parse.urlencode({'username': 'admin', 'password': 'iamadmin'})
 
@@ -34,5 +35,5 @@ if __name__ == '__main__':
                         action="store", dest='keywords',
                         required=True)
     options = parser.parse_args()
-    for url in json.loads(get_news_details(options.keywords)):
-        print(url)
+    for res in json.loads(get_news_details(options.keywords)):
+        print(res)

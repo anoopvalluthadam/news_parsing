@@ -35,14 +35,16 @@ class NPMongoDB(object):
         Returns:
             post_id (pymongo.results.InsertOneResult object): Post ID
         """
+        post_id = None
         try:
             exists = await self.db.posts.find_one({'url': data['url']})
         except Exception as error:
             print('Search Error: "{}"'.format(str(error)))
         if not exists:
             post_id = await self.db.posts.insert_one(data)
-            return post_id
-        print('{} exists in the DB...'.format(data['url']))
+        else:
+            print('{} exists in the DB...'.format(data['url']))
+        return post_id
 
     async def in_search(self, attr, field):
         """

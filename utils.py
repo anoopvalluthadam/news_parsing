@@ -25,7 +25,7 @@ def get_db_connect_string(configuraion, username='anoop',
     else:
         print('Could not find connect_string!')
         exit(1)
-    print(connect_string)
+
     return connect_string
 
 

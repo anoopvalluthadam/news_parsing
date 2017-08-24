@@ -17,7 +17,7 @@ class NewsSpider(scrapy.Spider):
     def parse(self, response):
         for url in response.css('h2.fc-item__title a::attr(href)').extract():
             print(url)
-            yield url
+            yield {'url': url}
             self.redis.lpush('mylist', url)
 
 
@@ -25,16 +25,20 @@ def run_spider():
     """
     Run Spider
     """
-    r = redis.StrictRedis(host='localhost', port=6379, db=0)
-    process = CrawlerProcess({
-        'USER_AGENT':
-        'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)',
-        'FEED_FORMAT': 'json',
-        'FEED_URI': '/tmp/result.json'
-    })
+    try:
+        r = redis.StrictRedis(host='localhost', port=6379, db=0)
+        process = CrawlerProcess({
+            'USER_AGENT':
+            'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)',
+            'FEED_FORMAT': 'json',
+            'FEED_URI': '/tmp/result.json'
+        })
 
-    process.crawl(NewsSpider, r)
-    process.start()
+        process.crawl(NewsSpider, r)
+        process.start()
+    except Exception as error:
+        print('Error in Spiding: {}'.format(str(error)))
+
     return 1
 
 

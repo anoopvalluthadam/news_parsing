@@ -1,3 +1,22 @@
+# -*- coding: utf-8; -*-
+#
+
+# This file is part of Mandriva Management Console (MMC).
+#
+# News Parsing is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# News Parsing is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with MMC.  If not, see <http://www.gnu.org/licenses/>.
+#
+# @author : Anoop Valluthadam <anoopvalluthadam@gmail.com>
 
 import asyncio
 import aioredis
@@ -20,6 +39,7 @@ class Crawler(object):
         """
         self.redis = await aioredis.create_redis(('localhost', 6379))
         while True:
+            # Data extraction from the URL
             url = await self.redis.lpop('mylist')
             if url:
                 url = url.decode("utf-8")
@@ -55,7 +75,7 @@ class Crawler(object):
 if __name__ == '__main__':
 
     crawler = Crawler()
-
+    # Get configuration
     configuraion = utils.read_from_configuration('config.yaml')
     connect_string = utils.get_db_connect_string(configuraion)
     mdb = NPMongoDB(connect_string)
@@ -64,7 +84,6 @@ if __name__ == '__main__':
     future_tasks = asyncio.ensure_future(crawler.parse_url(mdb))
     asyncio.gather(future_tasks)
     try:
-        print('Continuous loop...')
         loop.run_forever()
         loop.close()
     except KeyboardInterrupt:

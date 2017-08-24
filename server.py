@@ -1,3 +1,23 @@
+# -*- coding: utf-8; -*-
+#
+
+# This file is part of Mandriva Management Console (MMC).
+#
+# News Parsing is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# News Parsing is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with MMC.  If not, see <http://www.gnu.org/licenses/>.
+#
+# @author : Anoop Valluthadam <anoopvalluthadam@gmail.com>
+
 import tornado.autoreload
 import tornado.ioloop
 import tornado.web
@@ -90,6 +110,7 @@ def search(keywords, db):
     results = []
     search_attr = {'tags': {'$in': keywords}}
     try:
+        # Seach in the DB and generate result
         for document in db.find(search_attr):
             data = {
                 'url': document['url'],
@@ -108,6 +129,7 @@ class NewsSearch(tornado.web.RequestHandler):
     @tornado.web.asynchronous
     @gen.engine
     def post(self, decoded):
+        # Actual Search comes here
         keywords = self.get_argument('keywords').lower()
         data = search(keywords, self.settings['db'])
         self.write(data)

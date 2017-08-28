@@ -61,7 +61,7 @@ How to Setup locally
     3. webserver
     ```
     # python3 server.py
-    # python3 server.py
+    # python3 np_spider.py
     # python3 np_crawler.py
     ```
 - search through client
